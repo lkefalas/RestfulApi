@@ -13,8 +13,6 @@ https://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html
 https://dev.mysql.com/downloads/file/?id=462849
 And copy it to the {apache_dir}/lib
 
-Download Apache from 
-
 To run this project from Eclipse:
 
 1. File -> Import -> Maven -> Existing Maven Projects -> Find the pom file of the project

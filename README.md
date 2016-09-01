@@ -5,13 +5,11 @@ It uses a docker maven plugin to connect to a mysql database.
 
 To run this project you need Maven, Apache and Docker installed in your PC.
 
-Donwload and install Apache Maven:
+* Donwload and install Apache Maven:
 https://maven.apache.org/download.cgi
-
-Download and install Apache Tomcat:
+* Download and install Apache Tomcat:
 https://www.ntu.edu.sg/home/ehchua/programming/howto/Tomcat_HowTo.html
-
-Download the JDBC MySql connector from:
+* Download the JDBC MySql connector from:
 https://dev.mysql.com/downloads/file/?id=462849
 And copy it to the {apache_dir}/lib
 

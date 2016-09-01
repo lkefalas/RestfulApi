@@ -16,6 +16,7 @@ And copy it to the {apache_dir}/lib
 Download Apache from 
 
 To run this project from Eclipse:
+
 1. File -> Import -> Maven -> Existing Maven Projects -> Find the pom file of the project
 2. Run -> Run Configurations -> Maven -> New Launch configuration
 3. Enter the workspace of this project and as a goal enter clean install

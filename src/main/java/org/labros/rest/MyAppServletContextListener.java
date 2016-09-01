@@ -20,7 +20,6 @@ public class MyAppServletContextListener
 		Enumeration<java.sql.Driver> drivers = DriverManager.getDrivers();     
 
         java.sql.Driver driver = null;
-
         // clear drivers
         while(drivers.hasMoreElements()) {
             try {
@@ -40,11 +39,10 @@ public class MyAppServletContextListener
         }
 	}
 
-        //Run this before web application is started
+	//Run this before web application is started
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		System.out.println("ServletContextListener started");
-		
 		
 		Statement stmt;
 		System.out.println("Creating table in given database...");
@@ -66,9 +64,7 @@ public class MyAppServletContextListener
 		      String sql = "CREATE DATABASE IF NOT EXISTS STUDENTS";
 		      stmt.executeUpdate(sql);
 			stmt = (Statement) connection.createStatement();
-			
-			
-			
+
 			sql = "CREATE TABLE IF NOT EXISTS Registration " +
 	                   "(id INTEGER not NULL, " +
 	                   " first VARCHAR(255), " + 
@@ -90,5 +86,4 @@ public class MyAppServletContextListener
 			e.printStackTrace();
 		}
 	}
-	
 }

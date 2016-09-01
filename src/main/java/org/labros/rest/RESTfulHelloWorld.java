@@ -26,7 +26,7 @@ public class RESTfulHelloWorld
 	 			    "jdbc:mysql://127.0.0.1:" + 3306 + "/testdb",
 	 			    "root",
 	 			    "abc123"
-	    	);
+	    		);
 	    	 
 			stmt = (Statement) connection.createStatement();	    	 
 			sql = "SELECT id, first, last, age FROM Registration";

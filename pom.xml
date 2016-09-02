@@ -90,14 +90,6 @@
 						</image>
 					</images>
 				</configuration>
-				<executions>
-					<execution>
-						<id>pre-integraton-test</id>
-						<goals>
-							<goal>start</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 
 			<plugin>

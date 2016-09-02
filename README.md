@@ -12,7 +12,7 @@ https://docs.docker.com/engine/installation/
 
 To **run** the Api with Maven:
 * Go to the root directory of the project
-* mvn clean install jetty:run
+* mvn docker:start jetty:run
 
 To **stop** the Api:
 * mvn jetty:stop docker:stop

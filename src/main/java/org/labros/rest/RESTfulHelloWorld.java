@@ -23,11 +23,11 @@ public class RESTfulHelloWorld
 		String sql;
 		try{	 
 			connection = DriverManager.getConnection(
-	 			    "jdbc:mysql://127.0.0.1:" + 3306 + "/testdb",
-	 			    "root",
-	 			    "abc123"
+					"jdbc:mysql://127.0.0.1:" + 3306 + "/testdb?autoReconnect=true&useSSL=false",
+					"root",
+					"abc123"
 	    	);
-	    	 
+
 			stmt = (Statement) connection.createStatement();	    	 
 			sql = "SELECT id, first, last, age FROM Registration";
 			ResultSet rs = stmt.executeQuery(sql);
@@ -47,6 +47,7 @@ public class RESTfulHelloWorld
 		} finally {
 			connection.close();
 		}
+		System.out.println("Sending response:" +res);
 		//Return the response
 		return Response.status(200).entity(res).build();
 	}

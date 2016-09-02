@@ -13,7 +13,7 @@ public class MyAppServletContextListener
                implements ServletContextListener{
 
 	Connection connection;
-	
+
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		System.out.println("ServletContextListener destroyed");
@@ -43,7 +43,7 @@ public class MyAppServletContextListener
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		System.out.println("ServletContextListener started");
-		
+
 		Statement stmt;
 		System.out.println("Creating table in given database...");
 		try {
@@ -54,7 +54,7 @@ public class MyAppServletContextListener
 		}
 		try {
 			 connection = DriverManager.getConnection(
-			    "jdbc:mysql://127.0.0.1:" + 3306 + "/testdb",
+			    "jdbc:mysql://127.0.0.1:" + 3306 + "/testdb?autoReconnect=true&useSSL=false",
 			    "root",
 			    "abc123"
 			);
@@ -73,12 +73,12 @@ public class MyAppServletContextListener
 	                   " PRIMARY KEY ( id ))"; 
 
 	      stmt.executeUpdate(sql);
-	      
+
 	      stmt = (Statement) connection.createStatement();
-	      
+
 	      sql = "INSERT IGNORE INTO Registration " +
 	                   "VALUES (101, 'Zara', 'Ali', 18)";
-	      
+
 	      stmt.executeUpdate(sql);
 	      connection.close();
 		} catch (SQLException e) {

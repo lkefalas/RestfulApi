@@ -1,52 +1,50 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.labros.rest</groupId>
-  <artifactId>RestfulApi</artifactId>
-  <packaging>war</packaging>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>RestfulApi Maven Webapp</name>
-  <url>http://maven.apache.org</url>
-  
-  <properties>
-  	<junit.version>4.12</junit.version>
-  	<docker-maven-plugin.version>0.15.16</docker-maven-plugin.version>
-  </properties>
-  
-  <dependencies>
-  <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-	<dependency>
-	    <groupId>mysql</groupId>
-	    <artifactId>mysql-connector-java</artifactId>
-	    <version>5.1.39</version>
-	    <scope>provided</scope>
-	</dependency>
-	
-	<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
-<dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>javax.servlet-api</artifactId>
-    <version>4.0.0-b01</version>
-</dependency>
-	
-  
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-server</artifactId>
-			<version>1.9</version>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.labros.rest</groupId>
+	<artifactId>RestfulApi</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>RestfulApi Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<junit.version>4.12</junit.version>
+		<docker-maven-plugin.version>0.15.16</docker-maven-plugin.version>
+	</properties>
+
+	<dependencies>
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.39</version>
 		</dependency>
-  </dependencies>
-  <build>
+
+		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.0-b01</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+	    <dependency>
+				<groupId>com.sun.jersey</groupId>
+				<artifactId>jersey-server</artifactId>
+				<version>1.9</version>
+		</dependency>
+	</dependencies>
+
+	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
- 
 		<plugins>
- 
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.4</version>
@@ -55,7 +53,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
- 
+
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
@@ -64,43 +62,58 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>docker-maven-plugin</artifactId>
-            <version>${docker-maven-plugin.version}</version>
-            <configuration>
-            <images>
-                <image>
-                    <alias>database</alias>
-                    <name>mysql:latest</name>
-                    <run>
-                        <wait>
-                            <log>MySQL init process done. Ready for start up.</log>
-                            <time>20000</time>
-                        </wait>
-                        <env>
-                            <MYSQL_ROOT_PASSWORD>abc123</MYSQL_ROOT_PASSWORD>
-                            <MYSQL_DATABASE>testdb</MYSQL_DATABASE>
-                            <MYSQL_USER>mysql</MYSQL_USER>
-                            <MYSQL_PASSWORD>mysql</MYSQL_PASSWORD>
-                        </env>
-                        <ports>
-                            <port>3306:3306</port>
-                        </ports>
-                    </run>
-                </image>
-            </images>
-        </configuration>
-       <executions>
-          <execution>
-            <id>pre-integraton-test</id>
-            <goals>
-              <goal>start</goal>
-            </goals>
-          </execution>
-        </executions>
-        </plugin>
-	</plugins>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>${docker-maven-plugin.version}</version>
+				<configuration>
+					<images>
+						<image>
+							<alias>database</alias>
+							<name>mysql:latest</name>
+							<run>
+								<wait>
+									<log>MySQL init process done. Ready for start up.</log>
+									<time>20000</time>
+								</wait>
+								<env>
+									<MYSQL_ROOT_PASSWORD>abc123</MYSQL_ROOT_PASSWORD>
+									<MYSQL_DATABASE>testdb</MYSQL_DATABASE>
+									<MYSQL_USER>mysql</MYSQL_USER>
+									<MYSQL_PASSWORD>mysql</MYSQL_PASSWORD>
+								</env>
+								<ports>
+									<port>3306:3306</port>
+								</ports>
+							</run>
+						</image>
+					</images>
+				</configuration>
+				<executions>
+					<execution>
+						<id>pre-integraton-test</id>
+						<goals>
+							<goal>start</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.2.10.v20150310</version>
+				<configuration>
+					<stopPort>9966</stopPort>
+					<stopKey>foo</stopKey>
+					<stopWait>10</stopWait>
+					<webApp>
+						<contextPath>/RestfulApi</contextPath>
+						<descriptor>${project.basedir}/src/main/webapp/web.xml</descriptor>
+					</webApp>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 </project>

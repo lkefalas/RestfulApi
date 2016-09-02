@@ -7,20 +7,10 @@
 	<listener>
     	<listener-class>org.labros.rest.MyAppServletContextListener</listener-class>
 	</listener>
-	
+
 	<display-name>RestfulApi</display-name>
 
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.htm</welcome-file>
-		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>default.html</welcome-file>
-		<welcome-file>default.htm</welcome-file>
-		<welcome-file>default.jsp</welcome-file>
-	</welcome-file-list>
-
 	<servlet>
-
 		<servlet-name>RestfulApi</servlet-name>
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
 		<init-param>

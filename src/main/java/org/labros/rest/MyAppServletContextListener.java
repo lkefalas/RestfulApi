@@ -63,24 +63,19 @@ public class MyAppServletContextListener
 		      
 		      String sql = "CREATE DATABASE IF NOT EXISTS STUDENTS";
 		      stmt.executeUpdate(sql);
-			stmt = (Statement) connection.createStatement();
+		      stmt = (Statement) connection.createStatement();
 
-			sql = "CREATE TABLE IF NOT EXISTS Registration " +
-	                   "(id INTEGER not NULL, " +
+		      sql = "CREATE TABLE IF NOT EXISTS Registration " +
+	                   "(id INTEGER not NULL AUTO_INCREMENT, " +
 	                   " first VARCHAR(255), " + 
 	                   " last VARCHAR(255), " + 
 	                   " age INTEGER, " + 
 	                   " PRIMARY KEY ( id ))"; 
 
-	      stmt.executeUpdate(sql);
+		      stmt.executeUpdate(sql);
 
-	      stmt = (Statement) connection.createStatement();
-
-	      sql = "INSERT IGNORE INTO Registration " +
-	                   "VALUES (101, 'Zara', 'Ali', 18)";
-
-	      stmt.executeUpdate(sql);
-	      connection.close();
+		      stmt.executeUpdate(sql);
+		      connection.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

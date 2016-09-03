@@ -17,7 +17,10 @@ To **run** the Api with Maven:
 To **stop** the Api:
 * mvn jetty:stop docker:stop
 
-Open a browser and enter: http://127.0.0.1:8080/RestfulApi/rest/
+## API usage:
+* http://127.0.0.1:8080/Phonebook/contacts/ 
+Gets all the contacts
+* http://127.0.0.1:8080/Phonebook/contacts/
+Inserts a dummy contact
 
-TADA!!!
 #To be continued

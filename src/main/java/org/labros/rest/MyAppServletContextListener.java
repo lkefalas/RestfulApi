@@ -27,15 +27,16 @@ public class MyAppServletContextListener
                 DriverManager.deregisterDriver(driver);
 
             } catch (SQLException ex) {
-                // deregistration failed, might want to do something, log at the very least
+            	ex.printStackTrace();
             }
         }
-
+        
         // MySQL driver leaves around a thread. This static method cleans it up.
         try {
             AbandonedConnectionCleanupThread.shutdown();
         } catch (InterruptedException e) {
             // again failure, not much you can do
+        	e.printStackTrace();
         }
 	}
 
@@ -49,27 +50,31 @@ public class MyAppServletContextListener
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
 		try {
-			 connection = DriverManager.getConnection(
-			    "jdbc:mysql://127.0.0.1:" + 3306 + "/testdb?autoReconnect=true&useSSL=false",
-			    "root",
-			    "abc123"
+			connection = DriverManager.getConnection(
+				    "jdbc:mysql://127.0.0.1:" + 3306 + "/testdb?autoReconnect=true&useSSL=false",
+				    "root",
+				    "abc123"
 			);
-			 
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+		try {
 			 stmt = (Statement) connection.createStatement();
 		      
-		      String sql = "CREATE DATABASE IF NOT EXISTS STUDENTS";
+		      String sql = "CREATE DATABASE IF NOT EXISTS Phonebook";
 		      stmt.executeUpdate(sql);
 		      stmt = (Statement) connection.createStatement();
 
-		      sql = "CREATE TABLE IF NOT EXISTS Registration " +
-	                   "(id INTEGER not NULL AUTO_INCREMENT, " +
-	                   " first VARCHAR(255), " + 
-	                   " last VARCHAR(255), " + 
-	                   " age INTEGER, " + 
+		      sql = "CREATE TABLE IF NOT EXISTS Contact " +
+	                   "(Id INTEGER not NULL AUTO_INCREMENT, " +
+	                   " Name VARCHAR(255), " + 
+	                   " Surname VARCHAR(255), " + 
+	                   " DoB DATETIME, " + 
 	                   " PRIMARY KEY ( id ))"; 
 
 		      stmt.executeUpdate(sql);
@@ -77,7 +82,6 @@ public class MyAppServletContextListener
 		      stmt.executeUpdate(sql);
 		      connection.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

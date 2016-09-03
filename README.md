@@ -20,7 +20,7 @@ To **stop** the Api:
 ## API usage:
 * http://127.0.0.1:8080/Phonebook/contacts/ 
 Gets all the contacts
-* http://127.0.0.1:8080/Phonebook/contacts/
+* http://127.0.0.1:8080/Phonebook/contacts/insert
 Inserts a dummy contact
 
 #To be continued

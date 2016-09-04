@@ -2,6 +2,9 @@ package org.labros.rest;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import org.labros.rest.Properties.Property;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -54,10 +57,17 @@ public class MyAppServletContextListener
 		}
 		
 		try {
+			String port = Property.getMyProperty("db_port");
+			String database = Property.getMyProperty("db_database");
+			String root_user = Property.getMyProperty("db_root_user");
+			String root_password = Property.getMyProperty("db_root_pass");
+			String db_url = Property.getMyProperty("db_url");
+			
 			connection = DriverManager.getConnection(
-				    "jdbc:mysql://127.0.0.1:" + 3306 + "/phonebookdb?autoReconnect=true&useSSL=false",
-				    "root",
-				    "root_password"
+				    db_url + ":" + port +
+				    "/" + database +"?autoReconnect=true&useSSL=false",
+				    root_user,
+				    root_password
 			);
 		} catch (SQLException e1) {
 			e1.printStackTrace();

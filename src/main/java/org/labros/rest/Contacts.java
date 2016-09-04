@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.labros.rest.Model.Contact;
 import org.labros.rest.Model.ResponseList;
+import org.labros.rest.Properties.Property;
 
 @Path("/contacts")
 public class Contacts {
@@ -24,10 +25,17 @@ public class Contacts {
 	@Produces({MediaType.APPLICATION_JSON})
 	public ResponseList getStartingPage() throws SQLException
 	{
+		String port = Property.getMyProperty("db_port");
+		String database = Property.getMyProperty("db_database");
+		String root_user = Property.getMyProperty("db_root_user");
+		String root_password = Property.getMyProperty("db_root_pass");
+		String db_url = Property.getMyProperty("db_url");
+		
 		Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://127.0.0.1:" + 3306 + "/phonebookdb?autoReconnect=true&useSSL=false",
-				"root",
-				"root_password"
+			    db_url + ":" + port +
+			    "/" + database +"?autoReconnect=true&useSSL=false",
+			    root_user,
+			    root_password
 		);
 		Statement stmt = null;
 		String sql;
@@ -64,10 +72,17 @@ public class Contacts {
 	@Produces("text/html")
 	public Response insertSomething() throws SQLException
 	{
+		String port = Property.getMyProperty("db_port");
+		String database = Property.getMyProperty("db_database");
+		String root_user = Property.getMyProperty("db_root_user");
+		String root_password = Property.getMyProperty("db_root_pass");
+		String db_url = Property.getMyProperty("db_url");
+		
 		Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://127.0.0.1:" + 3306 + "/phonebookdb?autoReconnect=true&useSSL=false",
-			    "root",
-			    "root_password"
+			    db_url + ":" + port +
+			    "/" + database +"?autoReconnect=true&useSSL=false",
+			    root_user,
+			    root_password
 		);
 		Statement stmt = null;
 		String sql;

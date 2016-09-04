@@ -12,19 +12,16 @@
 		<docker-maven-plugin.version>0.15.16</docker-maven-plugin.version>
 	</properties>
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.39</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>4.0.0-b01</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.owlike/genson -->
 		<dependency>
 			<groupId>com.owlike</groupId>
 			<artifactId>genson</artifactId>
@@ -36,7 +33,7 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-	    <dependency>
+		<dependency>
 				<groupId>com.sun.jersey</groupId>
 				<artifactId>jersey-server</artifactId>
 				<version>1.9</version>
@@ -47,9 +44,9 @@
 			<version>1.19.2</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.sun.jersey</groupId>
-		    <artifactId>jersey-json</artifactId>
-		    <version>1.18.1</version>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-json</artifactId>
+			<version>1.18.1</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -72,6 +69,24 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0-alpha-2</version>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>dev.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>${docker-maven-plugin.version}</version>
@@ -83,35 +98,59 @@
 							<run>
 								<wait>
 									<log>MySQL init process done. Ready for start up.</log>
-									<time>20000</time>
+									<time>200000</time>
 								</wait>
 								<env>
-									<MYSQL_ROOT_PASSWORD>abc123</MYSQL_ROOT_PASSWORD>
-									<MYSQL_DATABASE>testdb</MYSQL_DATABASE>
-									<MYSQL_USER>mysql</MYSQL_USER>
-									<MYSQL_PASSWORD>mysql</MYSQL_PASSWORD>
+									<MYSQL_ROOT_PASSWORD>${db_root_pass}</MYSQL_ROOT_PASSWORD>
+									<MYSQL_DATABASE>${db_database}</MYSQL_DATABASE>
+									<MYSQL_USER>${db_user}</MYSQL_USER>
+									<MYSQL_PASSWORD>${db_password}</MYSQL_PASSWORD>
 								</env>
 								<ports>
-									<port>3306:3306</port>
+									<port>${db_port}:${db_port}</port>
 								</ports>
 							</run>
 						</image>
 					</images>
 				</configuration>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>start</goal>
+						</goals>
+				</execution>
+				<execution>
+					<id>docker-stop</id>
+					<configuration>
+							<goals>
+								<goal>stop</goal>
+							</goals>
+					</configuration>
+				</execution>
+			</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>9.2.10.v20150310</version>
-				<configuration>
-					<stopPort>9966</stopPort>
-					<stopKey>foo</stopKey>
-					<stopWait>10</stopWait>
-					<webApp>
-						<contextPath>/</contextPath>
-						<descriptor>${project.basedir}/src/main/webapp/web.xml</descriptor>
-					</webApp>
-				</configuration>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<stopPort>9966</stopPort>
+							<stopKey>foo</stopKey>
+							<stopWait>10</stopWait>
+							<webApp>
+								<contextPath>/</contextPath>
+								<descriptor>${project.basedir}/src/main/webapp/web.xml</descriptor>
+							</webApp>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

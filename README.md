@@ -12,10 +12,11 @@ https://docs.docker.com/engine/installation/
 
 To **run** the Api with Maven:
 * Go to the root directory of the project
-* mvn docker:start jetty:run
+* mvn clean install
 
 To **stop** the Api:
-* mvn jetty:stop docker:stop
+* Press Ctrl+C
+* mvn docker:stop
 
 ## API usage:
 * http://127.0.0.1:8080/Phonebook/contacts/ 

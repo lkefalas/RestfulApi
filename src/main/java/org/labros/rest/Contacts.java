@@ -25,9 +25,9 @@ public class Contacts {
 	public ResponseList getStartingPage() throws SQLException
 	{
 		Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://127.0.0.1:" + 3306 + "/testdb?autoReconnect=true&useSSL=false",
+				"jdbc:mysql://127.0.0.1:" + 3306 + "/phonebookdb?autoReconnect=true&useSSL=false",
 				"root",
-				"abc123"
+				"root_password"
 		);
 		Statement stmt = null;
 		String sql;
@@ -65,9 +65,9 @@ public class Contacts {
 	public Response insertSomething() throws SQLException
 	{
 		Connection connection = DriverManager.getConnection(
-				"jdbc:mysql://127.0.0.1:" + 3306 + "/testdb?autoReconnect=true&useSSL=false",
-				"root",
-				"abc123"
+				"jdbc:mysql://127.0.0.1:" + 3306 + "/phonebookdb?autoReconnect=true&useSSL=false",
+			    "root",
+			    "root_password"
 		);
 		Statement stmt = null;
 		String sql;

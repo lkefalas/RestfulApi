@@ -55,9 +55,9 @@ public class MyAppServletContextListener
 		
 		try {
 			connection = DriverManager.getConnection(
-				    "jdbc:mysql://127.0.0.1:" + 3306 + "/testdb?autoReconnect=true&useSSL=false",
+				    "jdbc:mysql://127.0.0.1:" + 3306 + "/phonebookdb?autoReconnect=true&useSSL=false",
 				    "root",
-				    "abc123"
+				    "root_password"
 			);
 		} catch (SQLException e1) {
 			e1.printStackTrace();

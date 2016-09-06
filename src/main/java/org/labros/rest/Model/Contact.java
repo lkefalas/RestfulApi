@@ -2,11 +2,6 @@ package org.labros.rest.Model;
 
 import java.util.Date;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
-import org.codehaus.jackson.map.annotate.JsonRootName;
-
-@JsonRootName("Contacts")
 public class Contact {
 
 	private int Id;

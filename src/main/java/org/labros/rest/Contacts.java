@@ -1,7 +1,7 @@
 package org.labros.rest;
 
+import com.google.gson.GsonBuilder;
 import com.mysql.jdbc.Statement;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.sql.Connection;
@@ -9,22 +9,21 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.labros.rest.Model.Contact;
-import org.labros.rest.Model.ResponseList;
+import org.labros.rest.Model.ContactsWrapper;
+import org.labros.rest.Model.ResponseWrapper;
 import org.labros.rest.Properties.Property;
 
 @Path("/contacts")
 public class Contacts {
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	public ResponseList getStartingPage() throws SQLException
-	{
+	public String getStartingPage() throws SQLException {
 		String port = Property.getMyProperty("db_port");
 		String database = Property.getMyProperty("db_database");
 		String root_user = Property.getMyProperty("db_root_user");
@@ -39,7 +38,7 @@ public class Contacts {
 		);
 		Statement stmt = null;
 		String sql;
-		ArrayList<Object> contacts = new ArrayList<Object>();
+		ArrayList<Contact> contacts = new ArrayList<Contact>();
 		try{	 
 			stmt = (Statement) connection.createStatement();
 			sql = "SELECT Id, Name, Surname, DoB FROM Contact";
@@ -55,22 +54,21 @@ public class Contacts {
 				c.setDoB(rs.getDate("DoB"));
 				//Display values
 				contacts.add(c);
-				System.out.println("Sending response:" +c.toString());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			connection.close();
 		}
-		ResponseList res = new ResponseList();
-		res.setList(contacts);
-		return res;
+
+		ContactsWrapper rw = new ContactsWrapper();
+		rw.setFoo(contacts);
+		return new GsonBuilder().create().toJson(rw);
 	}
 
-	@GET
-	@Path("/insert")
-	@Produces("text/html")
-	public Response insertSomething() throws SQLException
+	@POST
+	@Produces({MediaType.APPLICATION_JSON})
+	public String insertSomething() throws SQLException
 	{
 		String port = Property.getMyProperty("db_port");
 		String database = Property.getMyProperty("db_database");
@@ -98,8 +96,6 @@ public class Contacts {
 		} finally {
 			connection.close();
 		}
-		return Response.status(200)
-				.entity("Entry inserted on " + LocalDateTime.now())
-				.build();
+		return new GsonBuilder().create().toJson(new ResponseWrapper());
 	}
 }

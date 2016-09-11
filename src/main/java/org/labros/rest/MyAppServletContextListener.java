@@ -2,9 +2,7 @@ package org.labros.rest;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-
-import org.labros.rest.Properties.Property;
-
+import org.labros.rest.DAO.ConnectionFactory;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -13,27 +11,28 @@ import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 import com.mysql.jdbc.Statement;
 
 public class MyAppServletContextListener
-               implements ServletContextListener{
+					implements ServletContextListener{
 
 	Connection connection;
+	Statement stmt;
 
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		System.out.println("ServletContextListener destroyed");
-		Enumeration<java.sql.Driver> drivers = DriverManager.getDrivers();     
+		Enumeration<java.sql.Driver> drivers = DriverManager.getDrivers();
 
-        java.sql.Driver driver = null;
-        // clear drivers
-        while(drivers.hasMoreElements()) {
-            try {
-                driver = drivers.nextElement();
-                DriverManager.deregisterDriver(driver);
+		java.sql.Driver driver = null;
+		// clear drivers
+		while(drivers.hasMoreElements()) {
+			try {
+				driver = drivers.nextElement();
+				DriverManager.deregisterDriver(driver);
 
-            } catch (SQLException ex) {
-            	ex.printStackTrace();
-            }
-        }
-        
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+
         // MySQL driver leaves around a thread. This static method cleans it up.
         try {
             AbandonedConnectionCleanupThread.shutdown();
@@ -48,51 +47,36 @@ public class MyAppServletContextListener
 	public void contextInitialized(ServletContextEvent arg0) {
 		System.out.println("ServletContextListener started");
 
-		Statement stmt;
-		System.out.println("Creating table in given database...");
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		try {
-			String port = Property.getMyProperty("db_port");
-			String database = Property.getMyProperty("db_database");
-			String root_user = Property.getMyProperty("db_root_user");
-			String root_password = Property.getMyProperty("db_root_pass");
-			String db_url = Property.getMyProperty("db_url");
-			
-			connection = DriverManager.getConnection(
-				    db_url + ":" + port +
-				    "/" + database +"?autoReconnect=true&useSSL=false",
-				    root_user,
-				    root_password
-			);
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-		
-		try {
-			 stmt = (Statement) connection.createStatement();
-		      
-		      String sql = "CREATE DATABASE IF NOT EXISTS Phonebook";
-		      stmt.executeUpdate(sql);
-		      stmt = (Statement) connection.createStatement();
+			connection = ConnectionFactory.getConnection();
+			stmt = (Statement) connection.createStatement();
 
-		      sql = "CREATE TABLE IF NOT EXISTS Contact " +
-	                   "(Id INTEGER not NULL AUTO_INCREMENT, " +
-	                   " Name VARCHAR(255), " + 
-	                   " Surname VARCHAR(255), " + 
-	                   " DoB DATETIME, " + 
-	                   " PRIMARY KEY ( id ))"; 
+			String sql = "CREATE DATABASE IF NOT EXISTS Phonebook";
+			stmt.executeUpdate(sql);
 
-		      stmt.executeUpdate(sql);
+			stmt = (Statement) connection.createStatement();
+			sql = "CREATE TABLE IF NOT EXISTS Contact " +
+					"(Id INTEGER not NULL AUTO_INCREMENT, " +
+					" Name VARCHAR(255), " +
+					" Surname VARCHAR(255), " +
+					" DoB DATETIME, " +
+					" PRIMARY KEY ( id ))";
 
-		      stmt.executeUpdate(sql);
-		      connection.close();
+	stmt.executeUpdate(sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				ConnectionFactory.closeConnection(connection, stmt, null);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

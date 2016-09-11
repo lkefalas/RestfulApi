@@ -1,9 +1,7 @@
 package org.labros.rest.DAO;
 
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.io.IOException;
 import java.sql.Connection;
 import org.labros.rest.Properties.Property;
@@ -37,14 +35,9 @@ public class ConnectionFactory{
 		);
 	}
 
-	//Make sure you close the connection, statement and resultset
-	//But it doesn't adhere to the single responsibility rule.......
-	public static void closeConnection(Connection con, Statement st, ResultSet rs) throws SQLException {
+	//Make sure you close the connection
+	public static void closeConnection(Connection con) throws SQLException {
 		if(con!=null)
 			con.close();
-		if(st!=null)
-			st.close();
-		if(rs!=null)
-			rs.close();
 	}
 }

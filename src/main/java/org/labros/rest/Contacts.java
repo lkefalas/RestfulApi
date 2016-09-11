@@ -1,10 +1,10 @@
 package org.labros.rest;
 
 import com.google.gson.GsonBuilder;
-import com.mysql.jdbc.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -22,33 +22,36 @@ public class Contacts {
 	@Produces({MediaType.APPLICATION_JSON})
 	public String getStartingPage() throws SQLException {
 		Connection connection = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql;
 
 		ArrayList<Contact> contacts = new ArrayList<Contact>();
 
 		try{
 			connection = ConnectionFactory.getConnection();
-			stmt = (Statement) connection.createStatement();
-			sql = "SELECT Id, Name, Surname, DoB FROM Contact";
-			rs = stmt.executeQuery(sql);
-
-			//Extract data from result set
-			while(rs.next()){
-				Contact c = new Contact();
-				//Retrieve by column name
-				c.setId(rs.getInt("Id"));
-				c.setName(rs.getString("Name"));
-				c.setSurname(rs.getString("Surname"));
-				c.setDoB(rs.getDate("DoB"));
-				//Display values
-				contacts.add(c);
-			}
+			stmt = connection.prepareStatement("SELECT Id, Name, Surname, DoB FROM Contact");
+			rs = stmt.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			ConnectionFactory.closeConnection(connection,stmt,rs);
+			ConnectionFactory.closeConnection(connection);
+			if(stmt != null) {
+				stmt.close();
+			}
+		}
+
+		//Extract data from result set
+		while(rs != null && rs.next()){
+			Contact c = new Contact();
+			c.setId(rs.getInt("Id"));
+			c.setName(rs.getString("Name"));
+			c.setSurname(rs.getString("Surname"));
+			c.setDoB(rs.getDate("DoB"));
+			contacts.add(c);
+		}
+
+		if(rs != null) {
+			rs.close();
 		}
 
 		ContactsWrapper rw = new ContactsWrapper();
@@ -61,22 +64,26 @@ public class Contacts {
 	public String insertSomething() throws SQLException
 	{
 		Connection connection = null;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		ResultSet rs = null;
-		String sql;
 
 		try{
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date dt = new Date();
 			connection = ConnectionFactory.getConnection();
-			stmt = (Statement) connection.createStatement();
-			sql = "INSERT INTO Contact (Name,Surname,DoB) VALUES('Some','One','"+formatter.format(dt)+"')";
+			stmt = connection.prepareStatement("INSERT INTO Contact (Name,Surname,DoB) VALUES('Some','One','"+formatter.format(dt)+"')");
 			System.out.println("Inserted into the DB");
-			stmt.executeUpdate(sql);
+			stmt.execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			ConnectionFactory.closeConnection(connection,stmt,rs);
+			ConnectionFactory.closeConnection(connection);
+			if(rs != null) {
+				rs.close();
+			}
+			if(stmt != null) {
+				stmt.close();
+			}
 		}
 		return new GsonBuilder().create().toJson(new ResponseWrapper());
 	}

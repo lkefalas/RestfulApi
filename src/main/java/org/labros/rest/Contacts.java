@@ -31,27 +31,27 @@ public class Contacts {
 			connection = ConnectionFactory.getConnection();
 			stmt = connection.prepareStatement("SELECT Id, Name, Surname, DoB FROM Contact");
 			rs = stmt.executeQuery();
+
+			//Extract data from result set
+                	while(rs != null && rs.next()){
+                        	Contact c = new Contact();
+	                        c.setId(rs.getInt("Id"));
+        	                c.setName(rs.getString("Name"));
+                	        c.setSurname(rs.getString("Surname"));
+                        	c.setDoB(rs.getDate("DoB"));
+	                        contacts.add(c);
+                	}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			ConnectionFactory.closeConnection(connection);
-			if(stmt != null) {
-				stmt.close();
-			}
-		}
+			if(rs != null) {
+                        	rs.close();
+                	}
+	                if(stmt != null) {
+        	                stmt.close();
+                	}
 
-		//Extract data from result set
-		while(rs != null && rs.next()){
-			Contact c = new Contact();
-			c.setId(rs.getInt("Id"));
-			c.setName(rs.getString("Name"));
-			c.setSurname(rs.getString("Surname"));
-			c.setDoB(rs.getDate("DoB"));
-			contacts.add(c);
-		}
-
-		if(rs != null) {
-			rs.close();
 		}
 
 		ContactsWrapper rw = new ContactsWrapper();

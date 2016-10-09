@@ -1,13 +1,10 @@
 package org.labros.rest;
 
 import com.google.gson.GsonBuilder;
-import java.util.Date;
+import com.google.gson.JsonSyntaxException;
 import java.util.List;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -26,45 +23,44 @@ public class Contacts {
 		List<Contact> contacts = null;
 
 		try {
-			// From wich DB to retrieve the contacts
+			// From which DB to retrieve the contacts
 			Connection connection = (Connection)ConnectionFactory.getConnection();
 
 			//Retrieve the contacts from the given connection
 			contacts = new ContactsController().getAllContacts(connection);
 		} catch (SQLException e) {
-			return null;
+			return "[]";
 		}
-
 		return new GsonBuilder().create().toJson(contacts);
 	}
 
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public String insertSomething(String contact) throws SQLException
+	public String insertContact(String req)
 	{
-		Connection connection = null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
+		Contact c = new Contact();
 
 		try{
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date dt = new Date();
-			connection = ConnectionFactory.getConnection();
-			stmt = connection.prepareStatement("INSERT INTO Contact (Name,Surname,DoB) VALUES('Some','One','"+formatter.format(dt)+"')");
-			System.out.println("Inserted into the DB");
-			stmt.execute();
+			c = new GsonBuilder().create().fromJson(req, Contact.class);
+		} catch (JsonSyntaxException e) {
+			return new GsonBuilder().create().toJson(new ResponseWrapper("Error", "Validation error"));
+		}
+
+		if(!c.validate())
+			return new GsonBuilder().create().toJson(new ResponseWrapper("Error", "Validation error"));
+
+		try{
+			// In which DB to insert the contacts
+			Connection connection = (Connection)ConnectionFactory.getConnection();
+
+			if(new ContactsController().insertContact(connection, c) == 0)
+				return new GsonBuilder().create().toJson(new ResponseWrapper("Error", "DB error"));
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			ConnectionFactory.closeConnection(connection);
-			if(rs != null) {
-				rs.close();
-			}
-			if(stmt != null) {
-				stmt.close();
-			}
 		}
-		return new GsonBuilder().create().toJson(new ResponseWrapper());
+
+		// Send the response
+		return new GsonBuilder().create().toJson(new ResponseWrapper("Success"));
 	}
 }

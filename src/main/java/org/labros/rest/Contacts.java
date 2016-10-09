@@ -1,8 +1,7 @@
 package org.labros.rest;
 
 import com.google.gson.GsonBuilder;
-
-import java.util.Calendar;
+import com.google.gson.JsonSyntaxException;
 import java.util.List;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -38,20 +37,30 @@ public class Contacts {
 	@POST
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public String insertSomething(String contact)
+	public String insertContact(String req)
 	{
+		Contact c = new Contact();
+
+		try{
+			c = new GsonBuilder().create().fromJson(req, Contact.class);
+		} catch (JsonSyntaxException e) {
+			return new GsonBuilder().create().toJson(new ResponseWrapper("Error", "Validation error"));
+		}
+
+		if(!c.validate())
+			return new GsonBuilder().create().toJson(new ResponseWrapper("Error", "Validation error"));
+
 		try{
 			// In which DB to insert the contacts
 			Connection connection = (Connection)ConnectionFactory.getConnection();
-			Contact c = new Contact();
-			Calendar calendar = Calendar.getInstance();
-		    java.sql.Date date = new java.sql.Date(calendar.getTime().getTime());
-			c.setDoB(date);
+
 			if(new ContactsController().insertContact(connection, c) == 0)
-				return "[]";
+				return new GsonBuilder().create().toJson(new ResponseWrapper("Error", "DB error"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new GsonBuilder().create().toJson(new ResponseWrapper());
+
+		// Send the response
+		return new GsonBuilder().create().toJson(new ResponseWrapper("Success"));
 	}
 }

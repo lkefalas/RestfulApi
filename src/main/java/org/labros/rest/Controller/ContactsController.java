@@ -33,7 +33,6 @@ public class ContactsController {
 				c.setSurname(rs.getString("Surname"));
 				c.setDoB(rs.getDate("DoB"));
 				contacts.add(c);
-				System.out.println(c.getName() + " " + c.getSurname());
 			}
 		} catch (SQLException e) {
 			return Collections.emptyList();
@@ -57,7 +56,8 @@ public class ContactsController {
 			stmt = connection.prepareStatement(insertContact);
 			stmt.setString(1, c.getName());
 			stmt.setString(2, c.getSurname());
-			stmt.setString(3, "2016-01-01 00:00:00");
+			stmt.setDate(3,new java.sql.Date(c.getDoB().getTime()));
+
 			return stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println(e);

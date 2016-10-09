@@ -22,6 +22,11 @@ To **stop** the Api:
 * GET: http://127.0.0.1:8080/Phonebook/contacts/ 
 Gets all the contacts
 * POST: http://127.0.0.1:8080/Phonebook/contacts/
-Inserts a dummy contact
-
+Inserts a contact using a request structure:
+  `
+  {
+    "Name" : "some name",
+    "Surname" : "some surname",
+    "DoB" : "yyyy-MM-dd before current"
+  `
 #To be continued

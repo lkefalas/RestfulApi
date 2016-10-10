@@ -13,7 +13,7 @@ import org.labros.rest.Model.Contact;
 public class ContactsController {
 
 	private String selectContacts = "SELECT Id, Name, Surname, DoB FROM Contact";
-	private String insertContact = "INSERT INTO Contact (Name,Surname,Dob) VALUES(?,?,?)";
+	private String insertContact = "INSERT INTO Contact (Name,Surname) VALUES(?,?)";
 
 	//Retrieves all contacts from the given connection
 	public List<Contact> getAllContacts(Connection connection) throws SQLException {
@@ -54,9 +54,12 @@ public class ContactsController {
 
 		try {
 			stmt = connection.prepareStatement(insertContact);
-			stmt.setString(1, c.getName());
-			stmt.setString(2, c.getSurname());
-			stmt.setDate(3,new java.sql.Date(c.getDoB().getTime()));
+//			stmt.setString(1, c.getName());
+//			stmt.setString(2, c.getSurname());
+//			stmt.setDate(3,new java.sql.Date(c.getDoB().getTime()));
+			
+			stmt.setString(1, "Labros");
+			stmt.setString(2, "Kefalas");
 
 			return stmt.executeUpdate();
 		} catch (SQLException e) {

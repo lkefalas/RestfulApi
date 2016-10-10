@@ -2,24 +2,25 @@ package org.labros.rest;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+
+import java.util.Collections;
 import java.util.List;
 import java.sql.Connection;
 import java.sql.SQLException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import org.labros.rest.Model.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.labros.rest.Controller.ContactsController;
 import org.labros.rest.DAO.ConnectionFactory;
 
-@Path("/contacts")
+@RestController
 public class Contacts {
-	@GET
-	@Produces({MediaType.APPLICATION_JSON})
-	public String getContacts() {
+	
+	@RequestMapping(value ="/contacts", method = RequestMethod.GET)
+	public List<Contact> getContacts() {
 		List<Contact> contacts = null;
 
 		try {
@@ -29,26 +30,28 @@ public class Contacts {
 			//Retrieve the contacts from the given connection
 			contacts = new ContactsController().getAllContacts(connection);
 		} catch (SQLException e) {
-			return "[]";
+			System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+			return Collections.emptyList();
 		}
-		return new GsonBuilder().create().toJson(contacts);
+		return contacts;
 	}
 
-	@POST
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_JSON})
-	public String insertContact(String req)
+//	@POST
+//	@Consumes({MediaType.APPLICATION_JSON})
+//	@Produces({MediaType.APPLICATION_JSON})
+	@RequestMapping(value ="/contacts", method = RequestMethod.POST)
+	public String insertContact(@RequestBody String req)
 	{
 		Contact c = new Contact();
-
+		
+		
+		System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+		System.out.println(req);
 		try{
 			c = new GsonBuilder().create().fromJson(req, Contact.class);
 		} catch (JsonSyntaxException e) {
 			return new GsonBuilder().create().toJson(new ResponseWrapper("Error", "Validation error"));
 		}
-
-		if(!c.validate())
-			return new GsonBuilder().create().toJson(new ResponseWrapper("Error", "Validation error"));
 
 		try{
 			// In which DB to insert the contacts

@@ -40,18 +40,4 @@ public class Contact {
 	public void setDoB(Date doB) {
 		DoB = doB;
 	}
-	
-	@Override
-	public String toString() {
-		return "Contact [Id=" + Id + ", Name=" +Name +", Surname=" + Surname + ", DoB=" + DoB.toString()+"]";
-	}
-
-	public Boolean validate()
-	{
-		if(Name==null || Surname==null || DoB==null)
-			return false;
-		if(DoB.after(new Date()))
-			return false;
-		return true;
-	}
 }

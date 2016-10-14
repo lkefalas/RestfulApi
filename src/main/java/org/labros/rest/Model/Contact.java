@@ -1,43 +1,51 @@
 package org.labros.rest.Model;
 
-import java.util.Date;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class Contact {
 
-	private int Id;
-	private String Name;
-	private String Surname;
-	private Date DoB;
-	
+	private int id;
+
+	@NotEmpty
+	private String name;
+
+	@NotEmpty
+	private String surname;
+
+	@NotEmpty
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private String dob;
+
 	public int getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(int id) {
-		Id = id;
+		this.id = id;
 	}
 
 	public String getName() {
-		return Name;
+		return name;
 	}
 
 	public void setName(String name) {
-		Name = name;
+		this.name = name;
 	}
 
 	public String getSurname() {
-		return Surname;
+		return surname;
 	}
 
 	public void setSurname(String surname) {
-		Surname = surname;
+		this.surname = surname;
 	}
 
-	public Date getDoB() {
-		return DoB;
+	public String getDoB() {
+		return dob;
 	}
 
-	public void setDoB(Date doB) {
-		DoB = doB;
+	public void setDoB(String dob) {
+		this.dob = dob;
 	}
 }

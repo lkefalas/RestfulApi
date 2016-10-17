@@ -1,21 +1,18 @@
 package org.labros.rest.Model;
 
 import java.util.List;
-
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ContactsWrapper {
-
-	String respStatus = "success";
 	
-	@SerializedName("contacts")
-	private List<Contact> foo = null;
+	@JsonProperty("contacts")
+	private List<Contact> contacts = null;
 
-	public List<Contact> getFoo() {
-		return foo;
+	public List<Contact> getContacts() {
+		return contacts;
 	}
 
-	public void setFoo(List<Contact> foo) {
-		this.foo= foo;
+	public void setFoo(List<Contact> contacts) {
+		this.contacts= contacts;
 	}
 }

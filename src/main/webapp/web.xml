@@ -9,7 +9,8 @@
 	<display-name>RestfulPhonebook</display-name>
 	<servlet>
 		<servlet-name>Phonebook</servlet-name>
-		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!--
 		<init-param>
 			<param-name>com.sun.jersey.config.property.packages</param-name>
 			<param-value>org.labros.rest</param-value>
@@ -18,6 +19,7 @@
 			<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
 			<param-value>true</param-value>
 		</init-param>
+		  -->
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>

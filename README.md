@@ -5,7 +5,7 @@ It uses a docker maven plugin to connect to a mysql database.
 
 To run this project you need Maven and Docker installed in your PC.
 
-* Donwload and install Apache Maven:
+* Download and install Apache Maven:
 https://maven.apache.org/download.cgi
 * Download and install Docker:
 https://docs.docker.com/engine/installation/

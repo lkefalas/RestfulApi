@@ -3,10 +3,12 @@ package org.labros.rest;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import org.labros.rest.DAO.ConnectionFactory;
+import org.springframework.stereotype.Component;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+@Component
 public class MyAppServletContextListener
 					implements ServletContextListener{
 

@@ -1,66 +1,62 @@
 package org.labros.rest;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import java.util.List;
+import javax.validation.Valid;
 import java.sql.Connection;
 import java.sql.SQLException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import org.labros.rest.Model.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.labros.rest.Controller.ContactsController;
 import org.labros.rest.DAO.ConnectionFactory;
 
-@Path("/contacts")
+@RestController
 public class Contacts {
-	@GET
-	@Produces({MediaType.APPLICATION_JSON})
-	public String getContacts() {
-		List<Contact> contacts = null;
 
+	@RequestMapping(value ="/contacts", method = RequestMethod.GET)
+	public ResponseEntity<ContactsWrapper> getContacts() {
+		ContactsWrapper contacts = new ContactsWrapper();
+		HttpStatus status = HttpStatus.OK;
 		try {
 			// From which DB to retrieve the contacts
 			Connection connection = (Connection)ConnectionFactory.getConnection();
 
 			//Retrieve the contacts from the given connection
-			contacts = new ContactsController().getAllContacts(connection);
+			contacts.setFoo(new ContactsController()
+								.getAllContacts(connection));
 		} catch (SQLException e) {
-			return "[]";
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
-		return new GsonBuilder().create().toJson(contacts);
+		return new ResponseEntity<ContactsWrapper>(
+					contacts,
+					status
+				);
 	}
 
-	@POST
-	@Consumes({MediaType.APPLICATION_JSON})
-	@Produces({MediaType.APPLICATION_JSON})
-	public String insertContact(String req)
+	@RequestMapping(value ="/contacts", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<ResponseWrapper> insertContact(@Valid @RequestBody Contact c)
 	{
-		Contact c = new Contact();
-
-		try{
-			c = new GsonBuilder().create().fromJson(req, Contact.class);
-		} catch (JsonSyntaxException e) {
-			return new GsonBuilder().create().toJson(new ResponseWrapper("Error", "Validation error"));
-		}
-
-		if(!c.validate())
-			return new GsonBuilder().create().toJson(new ResponseWrapper("Error", "Validation error"));
-
+		HttpStatus status = HttpStatus.OK;
 		try{
 			// In which DB to insert the contacts
 			Connection connection = (Connection)ConnectionFactory.getConnection();
 
+			//Check if the record is inserted
 			if(new ContactsController().insertContact(connection, c) == 0)
-				return new GsonBuilder().create().toJson(new ResponseWrapper("Error", "DB error"));
+				status = HttpStatus.INTERNAL_SERVER_ERROR;
 		} catch (Exception e) {
-			e.printStackTrace();
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 
 		// Send the response
-		return new GsonBuilder().create().toJson(new ResponseWrapper("Success"));
+		return new ResponseEntity<ResponseWrapper>(
+											new ResponseWrapper(status.toString()),
+											status
+										);
 	}
 }

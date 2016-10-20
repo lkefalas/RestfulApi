@@ -37,8 +37,10 @@ public class ResponseWrapper {
 	private String codeToErrorMsg(String respStatus) {
 		switch(respStatus)
 		{
-			case "503":
+			case "500":
 				return "Internal Server Error";
+			case "503":
+				return "Service unavailable";
 			case "404":
 				return "Not Found";
 			case "200":

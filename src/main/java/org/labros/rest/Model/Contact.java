@@ -1,7 +1,6 @@
 package org.labros.rest.Model;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.format.annotation.DateTimeFormat;
 
 public class Contact {
 
@@ -41,11 +40,11 @@ public class Contact {
 		this.surname = surname;
 	}
 
-	public String getDoB() {
+	public String getDob() {
 		return dob;
 	}
 
-	public void setDoB(String dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 }

@@ -31,7 +31,7 @@ public class ContactsController {
 				c.setId(rs.getInt("Id"));
 				c.setName(rs.getString("Name"));
 				c.setSurname(rs.getString("Surname"));
-				c.setDoB(rs.getDate("DoB").toString());
+				c.setDob(rs.getDate("DoB").toString());
 				contacts.add(c);
 			}
 		} catch (SQLException e) {
@@ -57,7 +57,7 @@ public class ContactsController {
 			
 			stmt.setString(1, c.getName());
 			stmt.setString(2, c.getSurname());
-			stmt.setString(3, c.getDoB());
+			stmt.setString(3, c.getDob());
 
 			return stmt.executeUpdate();
 		} catch (SQLException e) {

@@ -1,50 +1,71 @@
 package org.labros.rest.Model;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
-public class Contact {
+@Entity
+@Table(name = "contact")
+public class Contact{
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long id;
 
-	private int id;
-
-	@NotEmpty
+	@NotNull
 	private String name;
 
-	@NotEmpty
+	@NotNull
 	private String surname;
 
-	@NotEmpty
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@NotNull
 	private String dob;
 
-	public int getId() {
+	public Contact() {
+
+	}
+
+	public Contact(long id) { 
+		this.id = id;
+	}
+	public Contact(String name, String surname, String dob)
+	{
+		this.name = name;
+		this.surname = surname;
+		this.dob = dob;
+	}
+
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setId(long value) {
+		this.id = value;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setName(String value) {
+		this.name = value;
 	}
 
 	public String getSurname() {
 		return surname;
 	}
 
-	public void setSurname(String surname) {
-		this.surname = surname;
+	public void setSurname(String value) {
+		this.surname = value;
 	}
 
 	public String getDob() {
 		return dob;
 	}
 
-	public void setDob(String dob) {
-		this.dob = dob;
+	public void setDob(String value) {
+		this.dob = value;
 	}
 }

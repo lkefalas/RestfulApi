@@ -25,8 +25,9 @@ Gets all the contacts
 Inserts a contact using a request structure:
   `
   {
-    "Name" : "some name",
-    "Surname" : "some surname",
-    "DoB" : "yyyy-MM-dd before current"
+    "name" : "some name",
+    "surname" : "some surname",
+    "dob" : "yyyy-MM-dd before current"
+  }
   `
 #To be continued
